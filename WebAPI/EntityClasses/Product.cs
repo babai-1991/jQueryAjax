@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace WebAPI
 {
-  [Table("Product", Schema = "SalesLT")]
+  [Table("Product", Schema ="SalesLT")]
   public partial class Product
   {
     [Required]
