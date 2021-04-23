@@ -68,7 +68,7 @@
   <script>
     'use strict';
 
-    const URL = "http://localhost:5000/api/product";
+    const URL = "https://localhost:44330/api/product";
 
     function get() {
       let req = new XMLHttpRequest();
@@ -85,7 +85,7 @@
     function getProduct() {
       let productid = 709;
       let req = new XMLHttpRequest();
-      req.onreadystatechange = function () {
+      req.onreadystatechange = () => {
         if (req.readyState === XMLHttpRequest.DONE && req.status === 200) {
           console.log(req.response);
           displayMessage("Products Retrieved");
@@ -98,7 +98,28 @@
 
 
     function insertProduct() {
+      //build and get product data from input 
+      let product = getFromInput();
+      let req = new XMLHttpRequest();
+      //hook up the onreadystatechanged event
+      req.onreadystatechange = () => {
+        if (req.readyState === XMLHttpRequest.DONE && req.status === 201) {
+          product = JSON.parse(req.response);
+          displayMessage('Product is inserted');
+          console.log(product);
 
+          //display product
+          setInput(product)
+        }
+      };
+
+      req.open('POST', URL);
+
+      //add content type header
+      req.setRequestHeader('Content-type', 'application/json');
+
+      //send the request
+      req.send(JSON.stringify(product));
     }
 
     function updateProduct() {
