@@ -9,9 +9,7 @@ namespace WebAPI.Controllers {
   [ApiController]
   public class ProductController :
     BaseApiController {
-    public ProductController(
-      AdventureWorksLTDbContext context)
-      : base() {
+    public ProductController(AdventureWorksLTDbContext context): base() {
       _DbContext = context;
     }
 
@@ -25,7 +23,7 @@ namespace WebAPI.Controllers {
       List<Product> list = new List<Product>();
 
       try {
-        if (_DbContext.Products.Count() > 0) {
+        if (_DbContext.Products.Any()) {
           list = _DbContext.Products.OrderBy(p => p.Name).ToList();
           ret = StatusCode(StatusCodes.Status200OK, list);
         } else {
