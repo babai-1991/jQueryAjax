@@ -111,6 +111,15 @@
           //display product
           setInput(product)
         }
+        //anything above 400 is considered as error
+        else if (req.readyState === XMLHttpRequest.DONE && req.status >= 400) {
+          handleAjaxError({
+            "status": req.status,
+            "statusText": req.statusText,
+            "response": req.response,
+            "responseText": req.responseText
+          })
+        }
       };
 
       req.open('POST', URL);
