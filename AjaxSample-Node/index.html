@@ -62,162 +62,25 @@
       </button>
     </div>
   </form>
-
+  <script src="/node_modules/jquery/dist/jquery.min.js"></script>
   <script src="/scripts/ajax-common.js"></script>
   <script src="/scripts/product.js"></script>
   <script>
     'use strict';
 
     const URL = "https://localhost:44330/api/product";
-
-    let _lastStatus = {
-      "status": 0,
-      "statusText": "",
-      "ok": false
-    };
-
-    function displayAllData(resp) {
-      if (_lastStatus.ok) {
-        console.log("In displayAllData()");
-        for (let i = 0; i < 10; i++) {
-          console.log(resp[i]);
-        }
-      }
-    }
-
-    function displayResponse(resp) {
-      console.log("In displayResponse()");
-      console.log(resp);
-    }
-
-    function processResponse(resp) {
-      console.log("In processResponse()");
-
-      // Copy status info to _lastStatus property
-      _lastStatus.status = resp.status;
-      _lastStatus.statusText = resp.statusText;
-      _lastStatus.ok = resp.ok;
-
-      // Display the status object
-      console.log(_lastStatus);
-
-      if (_lastStatus.ok) {
-        // Return the json from the response object to pass to the next .then() method
-        return resp.json();
-      }
-      else {
-        return null;
-        // Uncomment the following if you wish to go into the .catch() method
-        // return Promise.reject(resp);
-      }
-    }
-
     function get() {
-      // The data returned is an array of product objects
-      fetch(URL)
-        .then(response => processResponse(response))
-        .then(data => {
-          if (_lastStatus.ok) {
-            displayMessage("Products Retrieved");
-            displayAllData(data);
-          }
-          else {
-            displayError(_lastStatus.statusText);
-          }
+      $.ajax(URL)
+        .done((data) => {
+          displayMessage('products received');
+          console.log(data)
+        }).fail((error) => {
+          handleAjaxError(error);
+        }).always(() => {
+          console.log('Inside always method')
         })
-        .catch(error => handleAjaxError(error));
     }
 
-    function getProduct() {
-      // Retrieve a single product
-      fetch(URL + "/" + getValue("productID"))
-        .then(response => processResponse(response))
-        .then(data => {
-          if (_lastStatus.ok) {
-            displayMessage("Product Retrieved");
-            setInput(data);
-          }
-          else {
-            displayError(_lastStatus.statusText);
-          }
-        })
-        .catch(error => handleAjaxError(error));
-    }
-
-    const insertProduct = () => {
-      //gather data from user input
-      let product = getFromInput();
-
-      let options = {
-        method: 'POST',
-        headers: {
-          'content-type': 'application/json'
-        },
-        body: JSON.stringify(product)
-      }
-
-      fetch(URL, options).then((onSuccessResult) => {
-        return onSuccessResult.json();
-      }).then((data) => {
-        console.log(data);
-        //display product
-        setInput(data);
-      }).catch((error) => {
-        handleAjaxError(error);
-      })
-    }
-
-    function updateProduct() {
-      // Gather data from user input
-      let product = getFromInput();
-
-      let options = {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(product)
-      };
-
-      fetch(URL + "/" + product.productID, options)
-        .then(response => processResponse(response))
-        .then(data => {
-          if (_lastStatus.ok) {
-            displayMessage("Product Updated");
-            displayResponse(data);
-            // Display Product Info
-            setInput(data);
-          }
-          else {
-            displayError(_lastStatus.statusText);
-          }
-        })
-        .catch(error => handleAjaxError(error));
-    }
-
-    function deleteProduct() {
-      // Gather data from user input
-      let product = getFromInput();
-
-      let options = {
-        method: 'DELETE'
-      };
-
-      fetch(URL + "/" + product.productID, options)
-        .then(response => processResponse(response))
-        .then(data => {
-          if (_lastStatus.ok) {
-            displayMessage("Product Deleted");
-            displayResponse(data);
-            // Clear Product Info
-            clearInput();
-          }
-          else {
-            displayError(_lastStatus.statusText);
-          }
-        })
-        .catch(error => handleAjaxError(error));
-    }
   </script>
 </body>
 
