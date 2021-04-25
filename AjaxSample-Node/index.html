@@ -81,6 +81,22 @@
         })
     }
 
+    function getProduct() {
+      $.ajax(URL + "/" + getValue("productID"))
+        .done((data) => {
+          displayMessage("Product Retrieved");
+          console.log(data);
+          setInput(data);
+        })
+        .fail((error) => {
+          handleAjaxError(error);
+        })
+        .always(() => {
+          // Anything you want to happen here on either fail or done
+          console.log("In the always() method");
+        });
+    }
+
   </script>
 </body>
 
