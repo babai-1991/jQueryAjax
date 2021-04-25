@@ -166,6 +166,58 @@
         handleAjaxError(error);
       })
     }
+
+    function updateProduct() {
+      // Gather data from user input
+      let product = getFromInput();
+
+      let options = {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(product)
+      };
+
+      fetch(URL + "/" + product.productID, options)
+        .then(response => processResponse(response))
+        .then(data => {
+          if (_lastStatus.ok) {
+            displayMessage("Product Updated");
+            displayResponse(data);
+            // Display Product Info
+            setInput(data);
+          }
+          else {
+            displayError(_lastStatus.statusText);
+          }
+        })
+        .catch(error => handleAjaxError(error));
+    }
+
+    function deleteProduct() {
+      // Gather data from user input
+      let product = getFromInput();
+
+      let options = {
+        method: 'DELETE'
+      };
+
+      fetch(URL + "/" + product.productID, options)
+        .then(response => processResponse(response))
+        .then(data => {
+          if (_lastStatus.ok) {
+            displayMessage("Product Deleted");
+            displayResponse(data);
+            // Clear Product Info
+            clearInput();
+          }
+          else {
+            displayError(_lastStatus.statusText);
+          }
+        })
+        .catch(error => handleAjaxError(error));
+    }
   </script>
 </body>
 
